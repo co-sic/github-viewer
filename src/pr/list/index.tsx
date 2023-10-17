@@ -113,7 +113,7 @@ export function PullRequestList() {
     }
     for (const [key, value] of repositoryMap.entries()) {
       groupDefinitions.push({
-        name: key,
+        name: coders.find((c) => c.githubName === key)?.name ?? key,
         pullRequests: value,
       });
     }
