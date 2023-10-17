@@ -1,0 +1,16 @@
+schema: "./src/api/github.schema.graphql"
+documents: './src/api/**/*.graphql'
+hooks:
+  afterAllFileWrite:
+    - npm run format:fix
+generates:
+  src/api/operations.generated.ts:
+    config:
+      preResolveTypes: true
+      namingConvention:
+        enumValues: "change-case#upperCase"
+        typeNames: "keep"
+    plugins:
+      - typescript
+      - typescript-graphql-request
+      - typescript-operations

@@ -1,0 +1,61 @@
+query GetPullRequests($query: String!, $first: Int!, $after: String) {
+    search(query: $query, type: ISSUE, first: $first, after: $after ) {
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+        nodes {
+            __typename
+            ... on PullRequest {
+                title
+                url
+                number
+                createdAt
+                updatedAt
+                state
+                author {
+                    avatarUrl
+                    login
+                }
+                repository {
+                    name
+                    url
+                }
+                changedFiles
+                isReadByViewer
+                reviewDecision
+                projectsV2(first: 3) {
+                    nodes {
+                        number
+                        title
+                    }
+                }
+                reviews(first: 10) {
+                    nodes {
+                        author {
+                            avatarUrl
+                            login
+                        }
+                        createdAt
+                        state
+                        comments(first: 50) {
+                            nodes {
+                                id
+                            }
+                        }
+                    }
+                }
+                reviewRequests(first: 10) {
+                    nodes {
+                        requestedReviewer {
+                            __typename
+                            ... on User {
+                                login
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
