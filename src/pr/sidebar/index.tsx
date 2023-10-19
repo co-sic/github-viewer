@@ -1,5 +1,5 @@
 import { Box } from "@mui/joy";
-import { CoderList } from "./CoderList.tsx";
+import { AuthorList } from "./AuthorList.tsx";
 import { RepositoryList } from "./RepositoryList.tsx";
 import { useStore } from "../../store";
 import { GroupState } from "../../store/types.ts";
@@ -18,7 +18,7 @@ export function PullRequestSideBar() {
         groupState={firstGroupState}
         handleChange={selectFirstGroupState}
       />
-      {firstGroupState === GroupState.CODER ? <CoderList /> : null}
+      {firstGroupState === GroupState.CODER ? <AuthorList /> : null}
       {firstGroupState === GroupState.REPOSITORY ? <RepositoryList /> : null}
       {firstGroupState === GroupState.REVIEW ? <ReviewStateList /> : null}
       {firstGroupState === GroupState.PROJECT ? <ProjectList /> : null}

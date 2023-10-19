@@ -5,7 +5,7 @@ import {
   ReviewState,
   ReviewStateDefinition,
 } from "../store";
-import { fetchOpenPRsByUser, PullRequest } from "../api";
+import { fetchAllOpenPrs, PullRequest } from "../api";
 
 export interface FetchPullRequestResult {
   prs: PullRequest[];
@@ -28,15 +28,33 @@ export async function fetchAndGroupPullRequests(
     reviewStates: [],
   };
 
-  const res = await Promise.all(
-    coders.map((coder) => fetchOpenPRsByUser(coder.githubName, login)),
-  );
-  const prs = res.flat();
+  const coderSlices: Coder[][] = [];
+  const codersCopy = [...coders];
+  while (codersCopy.length) {
+    coderSlices.push(codersCopy.splice(0, 3));
+  }
+  const prs = (
+    await Promise.all(
+      coderSlices.map((s) =>
+        fetchAllOpenPrs(
+          s.map((c) => c.githubName),
+          login,
+        ),
+      ),
+    )
+  ).flat();
+
   data.prs.push(...prs);
   data.coders.push(
-    ...coders.map((c, idx) => {
-      const profilePictureUrl = res[idx][0]?.author.avatarUrl;
-      return { ...c, profilePictureUrl, openPrs: res[idx].length };
+    ...coders.map((c) => {
+      const profilePictureUrl = prs.find(
+        (pr) => pr.author.login === c.githubName,
+      )?.author.avatarUrl;
+      return {
+        ...c,
+        profilePictureUrl,
+        openPrs: prs.filter((pr) => pr.author.login === c.githubName).length,
+      };
     }),
   );
   data.repositories.push(

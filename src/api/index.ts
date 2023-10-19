@@ -1,1 +1,2 @@
-export * from "./fetchOpenPRsByUser.ts";
+export * from "./fetchAllOpenPrs.ts";
+export * from "./types.ts";

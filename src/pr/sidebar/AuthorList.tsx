@@ -8,7 +8,7 @@ import {
 } from "@mui/joy";
 import { useStore } from "../../store";
 
-export function CoderList() {
+export function AuthorList() {
   const coders = useStore((store) => store.state.coders);
   const selectedCoder = useStore((store) => store.state.selectedCoder);
   const selectCoder = useStore((store) => store.actions.selectCoder);

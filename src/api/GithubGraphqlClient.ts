@@ -18,12 +18,19 @@ export class GithubGraphqlClient {
     };
   }
 
-  async getPullRequests(userName: string, after?: string) {
+  async getPullRequests(
+    userNames: string[],
+    status: "open" | "merged",
+    first: number,
+    after?: string,
+  ) {
     return (
       await this.sdk.GetPullRequests(
         {
-          query: `is:pr author:${userName} is:open`,
-          first: 20,
+          query: `is:pr is:${status} ${userNames
+            .map((name) => `author:${name}`)
+            .join(" ")}`,
+          first,
           after,
         },
         { ...this.getHeaders() },

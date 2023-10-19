@@ -1,11 +1,15 @@
 import { GroupState, ReviewState, useStore } from "../../store";
-import { Box, Divider, List, Typography } from "@mui/joy";
+import { Avatar, Box, Divider, List, Stack, Typography } from "@mui/joy";
 import { PullRequestListItem } from "./Item.tsx";
 import { PullRequest } from "../../api";
 
 interface GroupDefinition {
   pullRequests: PullRequest[];
-  name: string;
+  header: React.ReactNode;
+}
+
+function getDefaultHeader(name: string) {
+  return <Typography level="title-md">{name}</Typography>;
 }
 
 export function PullRequestList() {
@@ -98,7 +102,7 @@ export function PullRequestList() {
     }
     for (const [key, value] of repositoryMap.entries()) {
       groupDefinitions.push({
-        name: key,
+        header: getDefaultHeader(key),
         pullRequests: value,
       });
     }
@@ -112,8 +116,14 @@ export function PullRequestList() {
       ]);
     }
     for (const [key, value] of repositoryMap.entries()) {
+      const coder = coders.find((c) => c.githubName === key);
       groupDefinitions.push({
-        name: coders.find((c) => c.githubName === key)?.name ?? key,
+        header: (
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar size="sm" src={coder?.profilePictureUrl} />{" "}
+            {getDefaultHeader(coder?.name ?? key)}
+          </Stack>
+        ),
         pullRequests: value,
       });
     }
@@ -134,21 +144,21 @@ export function PullRequestList() {
     const requested = repositoryMap.get(ReviewState.REQUESTED);
     if (requested) {
       groupDefinitions.push({
-        name: "Requested",
+        header: getDefaultHeader("Requested"),
         pullRequests: requested,
       });
     }
     const reviewed = repositoryMap.get(ReviewState.REVIEWED);
     if (reviewed) {
       groupDefinitions.push({
-        name: "Reviewed",
+        header: getDefaultHeader("Reviewed"),
         pullRequests: reviewed,
       });
     }
     const none = repositoryMap.get(ReviewState.NONE);
     if (none) {
       groupDefinitions.push({
-        name: "None",
+        header: getDefaultHeader("None"),
         pullRequests: none,
       });
     }
@@ -168,13 +178,13 @@ export function PullRequestList() {
     }
     for (const [key, value] of projectMap.entries()) {
       groupDefinitions.push({
-        name: key,
+        header: getDefaultHeader(key),
         pullRequests: value,
       });
     }
     if (noProject.length) {
       groupDefinitions.push({
-        name: "None",
+        header: getDefaultHeader("None"),
         pullRequests: noProject,
       });
     }
@@ -184,7 +194,7 @@ export function PullRequestList() {
     <Box
       sx={{ flexGrow: 0, display: "flex", flexDirection: "column", gap: "6px" }}
     >
-      {groupDefinitions.map(({ name, pullRequests }, index) => (
+      {groupDefinitions.map(({ header, pullRequests }, index) => (
         <Box
           sx={{
             flexGrow: 0,
@@ -192,9 +202,9 @@ export function PullRequestList() {
             flexDirection: "column",
             gap: "2px",
           }}
-          key={name}
+          key={index}
         >
-          <Typography level="title-md">{name}</Typography>
+          {header}
           <List>
             {pullRequests.map((pr) => (
               <PullRequestListItem
