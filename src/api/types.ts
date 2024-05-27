@@ -23,6 +23,7 @@ export interface Project {
 
 export interface PullRequest {
   url: string;
+  headRefName: string;
   createdAt: Date;
   updatedAt: Date;
   number: number;
@@ -38,4 +39,5 @@ export interface PullRequest {
   reviewRequested: boolean;
   reviewed: boolean;
   project: Project | null;
+  priority: boolean;
 }

@@ -26,6 +26,7 @@ export function mapResult(
     }
     const pr: PullRequest = {
       url: n.url,
+      headRefName: n.headRefName,
       createdAt: new Date(n.createdAt),
       updatedAt: new Date(n.updatedAt),
       number: n.number,
@@ -48,6 +49,7 @@ export function mapResult(
         ) ?? false,
       reviewed: false,
       project: null,
+      priority: n.labels?.nodes?.some((l) => l?.name === "priority") ?? false,
     };
     if (n.reviews?.nodes) {
       for (const r of n.reviews.nodes) {

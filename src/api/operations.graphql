@@ -7,12 +7,18 @@ query GetPullRequests($query: String!, $first: Int!, $after: String) {
         nodes {
             __typename
             ... on PullRequest {
+                headRefName
                 title
                 url
                 number
                 createdAt
                 updatedAt
                 state
+                labels(first: 5) {
+                    nodes {
+                        name
+                    }
+                }
                 author {
                     avatarUrl
                     login
@@ -24,7 +30,7 @@ query GetPullRequests($query: String!, $first: Int!, $after: String) {
                 changedFiles
                 isReadByViewer
                 reviewDecision
-                projectsV2(first: 3) {
+                projectsV2(first: 2) {
                     nodes {
                         number
                         title

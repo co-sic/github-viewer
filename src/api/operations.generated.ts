@@ -29782,12 +29782,18 @@ export const GetPullRequestsDocument = gql`
       nodes {
         __typename
         ... on PullRequest {
+          headRefName
           title
           url
           number
           createdAt
           updatedAt
           state
+          labels(first: 5) {
+            nodes {
+              name
+            }
+          }
           author {
             avatarUrl
             login
@@ -29799,7 +29805,7 @@ export const GetPullRequestsDocument = gql`
           changedFiles
           isReadByViewer
           reviewDecision
-          projectsV2(first: 3) {
+          projectsV2(first: 2) {
             nodes {
               number
               title
@@ -29894,6 +29900,7 @@ export type GetPullRequestsQuery = {
       | { __typename: "Organization" }
       | {
           __typename: "PullRequest";
+          headRefName: string;
           title: string;
           url: any;
           number: number;
@@ -29903,6 +29910,10 @@ export type GetPullRequestsQuery = {
           changedFiles: number;
           isReadByViewer?: boolean | null;
           reviewDecision?: PullRequestReviewDecision | null;
+          labels?: {
+            __typename?: "LabelConnection";
+            nodes?: Array<{ __typename?: "Label"; name: string } | null> | null;
+          } | null;
           author?:
             | { __typename?: "Bot"; avatarUrl: any; login: string }
             | {

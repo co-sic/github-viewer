@@ -46,12 +46,21 @@ export function PullRequestListItem({
           sx={{
             display: "flex",
             flexDirection: "row",
-            gap: "6px",
+            gap: "5px",
             alignItems: "center",
           }}
         >
+          <Typography
+            level="body-sm"
+            onClick={async (): Promise<void> => {
+              await navigator.clipboard.writeText(pullRequest.headRefName);
+            }}
+            sx={{
+              cursor: "pointer",
+            }}
+          >{`#${pullRequest.number}`}</Typography>
           <Typography level="body-sm">
-            {`#${pullRequest.number} opened ${timeAgo(pullRequest.createdAt)}${
+            {`opened ${timeAgo(pullRequest.createdAt)}${
               showAuthor ? `  by ${author}` : ""
             }`}
           </Typography>
@@ -80,6 +89,11 @@ export function PullRequestListItem({
                 {pullRequest.totalCommentCount}
               </Typography>
             </Box>
+          ) : null}
+          {pullRequest.priority ? (
+            <Chip color="danger" size="sm" variant="soft">
+              priority
+            </Chip>
           ) : null}
           {showProject && pullRequest.project ? (
             <Chip color="primary" size="sm" variant="soft">
