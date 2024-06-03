@@ -1,5 +1,4 @@
-import { GraphQLClient } from "graphql-request";
-import { GraphQLClientRequestHeaders } from "graphql-request/build/cjs/types";
+import { GraphQLClient, RequestOptions } from "graphql-request";
 import gql from "graphql-tag";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -21,6 +20,7 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
     };
+type GraphQLClientRequestHeaders = RequestOptions["requestHeaders"];
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -29846,12 +29846,14 @@ export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
   operationName: string,
   operationType?: string,
+  variables?: any,
 ) => Promise<T>;
 
 const defaultWrapper: SdkFunctionWrapper = (
   action,
   _operationName,
   _operationType,
+  _variables,
 ) => action();
 
 export function getSdk(
@@ -29872,6 +29874,7 @@ export function getSdk(
           ),
         "GetPullRequests",
         "query",
+        variables,
       );
     },
   };
