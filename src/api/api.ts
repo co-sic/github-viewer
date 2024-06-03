@@ -1,5 +1,11 @@
 import { GithubGraphqlClient } from "./GithubGraphqlClient.ts";
+import { getAccessToken } from "../utils";
 
-const AUTH_TOKEN = import.meta.env.VITE_AUTH_TOKEN;
+let api: GithubGraphqlClient;
 
-export const api = new GithubGraphqlClient(AUTH_TOKEN);
+export async function getApi() {
+    if (!api) {
+        api = new GithubGraphqlClient(await getAccessToken());
+    }
+    return api;
+}

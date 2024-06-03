@@ -1,6 +1,6 @@
+import { getApi } from "./api.ts";
 import { mapResult } from "./mapResult.ts";
 import { PullRequest } from "./types.ts";
-import { api } from "./api.ts";
 
 export async function fetchAllOpenPrs(
   usernames: string[],
@@ -11,6 +11,7 @@ export async function fetchAllOpenPrs(
   const openPRs: PullRequest[] = [];
 
   while (hasNextPage) {
+    const api = await getApi();
     const response = await api.getPullRequests(usernames, "open", 50, after);
     const mappedResult = mapResult(response, baseUsername);
 
