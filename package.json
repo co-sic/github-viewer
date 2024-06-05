@@ -22,10 +22,10 @@
     "axios": "1.5.1",
     "graphql": "16.8.1",
     "graphql-request": "6.1.0",
-    "immer": "^10.0.3",
+    "immer": "10.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "zustand": "^4.4.3"
+    "zustand": "4.4.3"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
