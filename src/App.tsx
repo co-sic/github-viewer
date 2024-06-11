@@ -1,6 +1,34 @@
 import { CssVarsProvider } from "@mui/joy/styles";
-import { Box, CssBaseline } from "@mui/joy";
+import { Box, Button, CssBaseline } from "@mui/joy";
 import { PullRequestView } from "./pr";
+import { OpenInNew } from "@mui/icons-material";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { AuthCallback } from "./AuthCallback";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <PullRequestView />,
+  },
+  {
+    path: "/login",
+    element: (
+      <Button
+        component="a"
+        href={`https://github.com/login/oauth/authorize?client_id=${
+          import.meta.env.VITE_GITHUB_CLIENT_ID
+        }`}
+        startDecorator={<OpenInNew />}
+      >
+        Login with Github
+      </Button>
+    ),
+  },
+  {
+    path: "/callback",
+    element: <AuthCallback />,
+  },
+]);
 
 export function App() {
   return (
@@ -21,7 +49,7 @@ export function App() {
             overflowY: "hidden",
           }}
         >
-          <PullRequestView />
+          <RouterProvider router={router} />
         </Box>
       </Box>
     </CssVarsProvider>
