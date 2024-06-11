@@ -17,21 +17,31 @@ export function storeToken({
     localStorage.setItem('github_refresh_token_expiry', (Date.now() + refresh_token_expires_in * 1000).toString());
 }
 
-// async function refreshToken() {
-//     throw new Error('Not implemented yet');
-// }
+async function refreshAccessToken() {
+    const refreshToken = localStorage.getItem('github_refresh_token');
+    if (!refreshToken) {
+        throw new Error('No refresh token found');
+    }
+    fetch("/.netlify/functions/refresh-token", {
+        method: "POST",
+        body: JSON.stringify({ refreshToken}),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            storeToken(data)
+        })
+}
 
 export async function getAccessToken() {
     const token = localStorage.getItem('github_access_token');
-    // TODO: Implement refresh token logic
-    // const expiry = localStorage.getItem('github_token_expiry');
-    // if (!token || !expiry) {
-    //     throw new Error('No token found');
-    // }
+    const expiry = localStorage.getItem('github_token_expiry');
+    if (!token || !expiry) {
+        throw new Error('No token found');
+    }
 
-    // if (parseInt(expiry) < Date.now()) {
-    //     await refreshToken();
-    // }
+    if (parseInt(expiry) < Date.now()) {
+        await refreshAccessToken();
+    }
 
     return token ?? '';
 }
